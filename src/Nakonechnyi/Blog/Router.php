@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Nakonechnyi\Catalog;
+namespace Nakonechnyi\Blog;
 
-use Nakonechnyi\Catalog\Controller\Category;
-use Nakonechnyi\Catalog\Controller\Post;
+use Nakonechnyi\Blog\Controller\Category;
+use Nakonechnyi\Blog\Controller\Post;
 
 class Router implements \Nakonechnyi\Framework\Http\RouterInterface
 {

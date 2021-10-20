@@ -7,7 +7,7 @@ return [
         'routers',
         [
             \DI\get(\Nakonechnyi\Cms\Router::class),
-            \DI\get(\Nakonechnyi\Catalog\Router::class),
+            \DI\get(\Nakonechnyi\Blog\Router::class),
             \DI\get(\Nakonechnyi\ContactUs\Router::class),
         ]
     )

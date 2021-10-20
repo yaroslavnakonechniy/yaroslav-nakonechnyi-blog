@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nakonechnyi\Catalog\Controller;
+namespace Nakonechnyi\Blog\Controller;
 
 use Nakonechnyi\Framework\Http\ControllerInterface;
 

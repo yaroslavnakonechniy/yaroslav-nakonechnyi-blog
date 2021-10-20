@@ -16,31 +16,3 @@ try {
     echo "{$e->getMessage()} in file {$e->getFile()} at line {$e->getLine()}";
     exit(1);
 }
-//
-//$requestDispatcher = new \Nakonechnyi\Framework\Http\RequestDispatcher([
-//    new \Nakonechnyi\Cms\Router(),
-//    new \Nakonechnyi\Catalog\Router(),
-//    new \Nakonechnyi\ContactUs\Router(),
-//]);
-//
-//$requestDispatcher->dispatch();
-
-
-exit;
-
-
-switch ($requestUri) {
-
-    default:
-        if ($data = blogGetBlogByUrl($requestUri)) {
-            $page = 'category.php';
-            break;
-        }
-
-        if ($data = blogGetPostByUrl($requestUri)) {
-            $page = 'post.php';
-            break;
-        }
-
-        break;
-}
