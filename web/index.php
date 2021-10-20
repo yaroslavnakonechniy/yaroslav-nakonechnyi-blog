@@ -2,17 +2,21 @@
 
 declare(strict_types=1);
 
-require_once '../src/data.php';
+require_once '../vendor/autoload.php';
 
-$requestUri = trim($_SERVER['REQUEST_URI'], '/');
+$requestDispatcher = new \Nakonechnyi\Framework\Http\RequestDispatcher([
+    new \Nakonechnyi\Cms\Router(),
+    new \Nakonechnyi\Catalog\Router(),
+    new \Nakonechnyi\ContactUs\Router(),
+]);
+
+$requestDispatcher->dispatch();
+
+exit;
+
 
 switch ($requestUri) {
-    case '':
-        $page = 'home.php';
-        break;
-    case 'contact-us':
-        $page = 'contact-us.php';
-        break;
+
     default:
         if ($data = blogGetBlogByUrl($requestUri)) {
             $page = 'category.php';
@@ -26,15 +30,3 @@ switch ($requestUri) {
 
         break;
 }
-
-
-if (!isset($page)) {
-    header("HTTP/1.0 404 Not Found");
-    exit(0);
-}
-
-header('Content-Type: text/html; charset=utf-8');
-
-ob_start();
-require_once "../src/page.php";
-echo ob_get_clean();
