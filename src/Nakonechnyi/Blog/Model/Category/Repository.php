@@ -26,17 +26,17 @@ class Repository
                 ->setCategoryId(1)
                 ->setName('Sport')
                 ->setUrl('sport')
-                ->setPosts([1]),
+                ->setPostIds([1]),
             2 => $this->makeEntity()
                 ->setCategoryId(2)
                 ->setName('TV')
                 ->setUrl('tv')
-                ->setPosts([3]),
+                ->setPostIds([3]),
             3 => $this->makeEntity()
                 ->setCategoryId(3)
                 ->setName('Shoping')
                 ->setUrl('shoping')
-                ->setPosts([2]),
+                ->setPostIds([2]),
         ];
     }
 
@@ -55,6 +55,8 @@ class Repository
 
         return array_pop($data);
     }
+
+
 
     /**
      * @return Entity

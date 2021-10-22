@@ -75,36 +75,24 @@ function blogGetNewPosts(): array
     return $key;
 }
 
-function blogGetCategoryPost(int $categoryId): array
-{
-    $categories = blogGetCategory();
-
-    if (!isset($categories[$categoryId])) {
-        throw new InvalidArgumentException("Category with ID $categoryId does not exist");
-    }
-
-    $postsForCategory = [];
-    $posts = blogGetPost();
-
-    foreach ($categories[$categoryId]['posts'] as $postId) {
-        if (!isset($posts[$postId])) {
-            throw new InvalidArgumentException("Product with ID $postId from category $categoryId does not exist");
-        }
-
-        $postsForCategory[] = $posts[$postId];
-    }
-
-    return $postsForCategory;
-}
-
-function blogGetPostByUrl(string $url): ?array
-{
-    $data = array_filter(
-        blogGetPost(),
-        static function ($post) use ($url) {
-            return $post['url'] === $url;
-        }
-    );
-
-    return array_pop($data);
-}
+//function blogGetCategoryPost(int $categoryId): array
+//{
+//    $categories = blogGetCategory();
+//
+//    if (!isset($categories[$categoryId])) {
+//        throw new InvalidArgumentException("Category with ID $categoryId does not exist");
+//    }
+//
+//    $postsForCategory = [];
+//    $posts = blogGetPost();
+//
+//    foreach ($categories[$categoryId]['posts'] as $postId) {
+//        if (!isset($posts[$postId])) {
+//            throw new InvalidArgumentException("Product with ID $postId from category $categoryId does not exist");
+//        }
+//
+//        $postsForCategory[] = $posts[$postId];
+//    }
+//
+//    return $postsForCategory;
+//}
