@@ -8,25 +8,20 @@ use Nakonechnyi\Framework\Http\ControllerInterface;
 
 class Category implements ControllerInterface
 {
-    private \Nakonechnyi\Framework\Http\Request $request;
+    private \Nakonechnyi\Framework\View\Renderer $renderer;
 
     /**
-     * @param \Nakonechnyi\Framework\Http\Request $request
+     * @param \Nakonechnyi\Framework\View\Renderer $renderer
      */
     public function __construct(
-        \Nakonechnyi\Framework\Http\Request $request
+        \Nakonechnyi\Framework\View\Renderer $renderer
     ) {
-
-        $this->request = $request;
+        $this->renderer = $renderer;
     }
 
     public function execute(): string
     {
-        $category = $this->request->getParameter('category');
-        $page = 'category.php';
+        return (string) $this->renderer->setContent(\Nakonechnyi\Blog\Block\Category::class);
 
-        ob_start();
-        require_once "../src/page.php";
-        return ob_get_clean();
     }
 }
