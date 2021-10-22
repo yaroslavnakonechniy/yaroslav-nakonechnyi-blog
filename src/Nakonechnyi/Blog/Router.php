@@ -11,13 +11,18 @@ class Router implements \Nakonechnyi\Framework\Http\RouterInterface
 {
     private \Nakonechnyi\Framework\Http\Request $request;
 
+    private Model\Category\Repository $categoryRepository;
+
     /**
      * @param \Nakonechnyi\Framework\Http\Request $request
+     * @param Model\Category\Repository $categoryRepository
      */
     public function __construct(
-        \Nakonechnyi\Framework\Http\Request $request
+        \Nakonechnyi\Framework\Http\Request $request,
+        \Nakonechnyi\Blog\Model\Category\Repository $categoryRepository
     ) {
         $this->request = $request;
+        $this->categoryRepository = $categoryRepository;
     }
     /**
      * @inheritDoc
@@ -26,8 +31,8 @@ class Router implements \Nakonechnyi\Framework\Http\RouterInterface
     {
         require_once '../src/data.php';
 
-        if ($data = blogGetBlogByUrl($requestUrl)) {
-            $this->request->setParameter('category',$data);
+        if ($category = $this->categoryRepository->getByUrl($requestUrl)) {
+            $this->request->setParameter('category',$category);
             return Category::class;
         }
 

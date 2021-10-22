@@ -29,9 +29,9 @@ require_once '../src/data.php';
     </a>
     <nav>
         <ul>
-            <?php foreach (blogGetCategory() as $category) : ?>
+            <?php foreach (blogGetCategory() as $categoryData) : ?>
                 <li>
-                    <a href="/<?= $category['url'] ?>"><?= $category['name'] ?></a>
+                    <a href="/<?= $categoryData['url'] ?>"><?= $categoryData['name'] ?></a>
                 </li>
             <?php endforeach; ?>
         </ul>

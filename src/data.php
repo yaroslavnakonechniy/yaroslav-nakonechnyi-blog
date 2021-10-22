@@ -97,18 +97,6 @@ function blogGetCategoryPost(int $categoryId): array
     return $postsForCategory;
 }
 
-function blogGetBlogByUrl(string $url): ?array
-{
-    $data = array_filter(
-        blogGetCategory(),
-        static function ($category) use ($url) {
-            return $category['url'] === $url;
-        }
-    );
-
-    return array_pop($data);
-}
-
 function blogGetPostByUrl(string $url): ?array
 {
     $data = array_filter(
