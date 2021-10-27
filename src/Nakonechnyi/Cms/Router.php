@@ -37,5 +37,4 @@ class Router implements \Nakonechnyi\Framework\Http\RouterInterface
 
         return '';
     }
-
 }

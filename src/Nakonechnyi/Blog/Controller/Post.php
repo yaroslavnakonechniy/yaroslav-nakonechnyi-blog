@@ -5,28 +5,26 @@ declare(strict_types=1);
 namespace Nakonechnyi\Blog\Controller;
 
 use Nakonechnyi\Framework\Http\ControllerInterface;
+use Nakonechnyi\Framework\Http\Response\Raw;
 
 class Post implements ControllerInterface
 {
-    private \Nakonechnyi\Framework\Http\Request $request;
+    private \Nakonechnyi\Framework\View\PageResponse $pageResponse;
 
     /**
-     * @param \Nakonechnyi\Framework\Http\Request $request
+     * @param \Nakonechnyi\Framework\View\PageResponse $pageResponse
      */
     public function __construct(
-        \Nakonechnyi\Framework\Http\Request $request
+        \Nakonechnyi\Framework\View\PageResponse $pageResponse
     ) {
-
-        $this->request = $request;
+        $this->pageResponse = $pageResponse;
     }
 
-    public function execute(): string
+    /**
+     * @return Raw
+     */
+    public function execute(): Raw
     {
-        $post = $this->request->getParameter('post');
-        $page = 'post.php';
-
-        ob_start();
-        require_once "../src/page.php";
-        return ob_get_clean();
+        return $this->pageResponse->setBody(\Nakonechnyi\Blog\Block\Post::class);
     }
 }

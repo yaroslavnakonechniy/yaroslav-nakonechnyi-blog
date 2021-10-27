@@ -5,15 +5,30 @@ declare(strict_types=1);
 namespace Nakonechnyi\ContactUs\Controller;
 
 use Nakonechnyi\Framework\Http\ControllerInterface;
+use Nakonechnyi\Framework\Http\Response\Raw;
+use Nakonechnyi\Framework\View\Block;
 
 class Form implements ControllerInterface
 {
-    public function execute(): string
-    {
-        $page = 'contact-us.php';
+    private \Nakonechnyi\Framework\View\PageResponse $pageResponse;
 
-        ob_start();
-        require_once "../src/page.php";
-        return ob_get_clean();
+    /**
+     * @param \Nakonechnyi\Framework\View\PageResponse $pageResponse
+     */
+    public function __construct(
+        \Nakonechnyi\Framework\View\PageResponse $pageResponse
+    ) {
+        $this->pageResponse = $pageResponse;
+    }
+
+    /**
+     * @return Raw
+     */
+    public function execute(): Raw
+    {
+        return $this->pageResponse->setBody(
+            Block::class,
+            '../src/Nakonechnyi/ContactUs/view/contact-us.php'
+        );
     }
 }

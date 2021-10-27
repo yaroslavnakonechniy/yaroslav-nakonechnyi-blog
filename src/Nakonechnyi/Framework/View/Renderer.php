@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Nakonechnyi\Framework\View;
@@ -9,13 +10,14 @@ class Renderer
 
     private string $contentBlockClass;
 
+    private string $contentBlockTemplate;
+
     /**
      * @param \DI\FactoryInterface $factory
      */
     public function __construct(
         \DI\FactoryInterface $factory
     ) {
-
         $this->factory = $factory;
     }
 
@@ -26,13 +28,23 @@ class Renderer
 
     /**
      * @param string $contentBlockClass
-     * @return $this
+     * @param string $template
+     * @return void
      */
-    public function setContent(string $contentBlockClass): Renderer
+    public function setContent(string $contentBlockClass, string $template = ''): Renderer
     {
         $this->contentBlockClass = $contentBlockClass;
+        $this->contentBlockTemplate = $template;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContentBlockTemplate(): string
+    {
+        return $this->contentBlockTemplate;
     }
 
     /**
@@ -47,7 +59,7 @@ class Renderer
         /** @var Block $block */
         $block = $this->factory->make($blockClass);
 
-        if($template) {
+        if ($template) {
             $block->setTemplate($template);
         }
 

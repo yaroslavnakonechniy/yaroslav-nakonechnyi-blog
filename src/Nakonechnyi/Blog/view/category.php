@@ -6,7 +6,7 @@
     <div class="post-list">
         <?php foreach ($block->getCategoryPosts() as $post) : ?>
             <div class="post">
-                <a href="/<?= $post->getName() ?>" title="<?= $post->getName() ?>">
+                <a href="/<?= $post->getUrl() ?>" title="<?= $post->getName() ?>">
                     <img src="/post-placeholder.png" alt="<?= $post->getName() ?>" width="200"/>
                 </a>
                 <a href="/<?= $post->getUrl() ?>" title="<?= $post->getName() ?>"><?= $post->getName() ?></a>
