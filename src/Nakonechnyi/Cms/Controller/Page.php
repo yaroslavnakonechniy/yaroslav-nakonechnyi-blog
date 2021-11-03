@@ -30,7 +30,7 @@ class Page implements \Nakonechnyi\Framework\Http\ControllerInterface
     {
         return $this->pageResponse->setBody(
             Block::class,
-            '../src/Nakonechnyi/Cms/view' . $this->request->getParameter('page') . '.php'
+            '../src/Nakonechnyi/Cms/view/home.php',
         );
     }
 }
