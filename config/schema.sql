@@ -1,6 +1,4 @@
-DROP TABLE IF EXISTS `category_post`;
-#---
-DROP TABLE IF EXISTS `author_post`;
+DROP TABLE IF EXISTS `category_post_author`;
 #--
 DROP TABLE IF EXISTS `author`;
 #---
@@ -33,12 +31,13 @@ CREATE TABLE `author` (
     PRIMARY KEY (`author_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Author Entity';
 #--
-CREATE TABLE `category_post` (
-    `category_post_id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Category Post ID',
+CREATE TABLE `category_post_author` (
+    `category_post_author_id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Category Post Author ID',
     `post_id` int unsigned NOT NULL COMMENT 'Post ID',
+    `author_id` int unsigned NOT NULL COMMENT 'Author ID',
     `category_id` int unsigned NOT NULL COMMENT 'Category ID',
-    PRIMARY KEY (`category_post_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Category Post Entity';
+    PRIMARY KEY (`category_post_author_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Category Post Author Entity';
 #--
 CREATE TABLE `daily_statistics` (
     `daily_statistics_id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Daily StatisticsID',
@@ -47,13 +46,6 @@ CREATE TABLE `daily_statistics` (
     `views` int unsigned NOT NULL COMMENT 'Views ID',
     PRIMARY KEY (`daily_statistics_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Daily Statistics  Entity';
-#--
-CREATE TABLE `author_post` (
-                               `author_post_id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'Author Post ID',
-                               `post_id` int unsigned NOT NULL COMMENT 'Post ID',
-                               `author_id` int unsigned NOT NULL COMMENT 'Author ID',
-                               PRIMARY KEY (`author_post_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Author Post Entity';
 #--
 INSERT INTO `post` (`name`, `url`, `description`, `date`)
 VALUES  ( 'Post 1', 'post 1', 'This is post 1', '2021-11-01'),
@@ -96,39 +88,22 @@ VALUES  ('Brian', 'Tompset'),
         ('Victor', 'Marvel'),
         ('Antony', 'Taison');
 #--
-INSERT INTO `author_post` (`post_id`, `author_id`)
-VALUES  ('1', '15'),
-        ('2', '14'),
-        ('3', '13'),
-        ('4', '12'),
-        ('5', '11'),
-        ('6', '10'),
-        ('7', '9'),
-        ('8', '8'),
-        ('9', '7'),
-        ('10', '6'),
-        ('11', '5'),
-        ('12', '4'),
-        ('13', '3'),
-        ('14', '2'),
-        ('15', '1');
-#--
-INSERT INTO `category_post` (`post_id`, `category_id`)
-VALUES  ('1', '3'),
-        ('2', '2'),
-        ('3', '1'),
-        ('4', '4'),
-        ('5', '3'),
-        ('6', '4'),
-        ('7', '5'),
-        ('8', '3'),
-        ('9', '1'),
-        ('10', '2'),
-        ('11', '1'),
-        ('12', '4'),
-        ('13', '4'),
-        ('14', '1'),
-        ('15', '5');
+INSERT INTO `category_post_author` (`post_id`, `author_id`, `category_id`)
+VALUES  ('1', '15', '1'),
+        ('2', '14', '2'),
+        ('3', '13', '3'),
+        ('4', '12', '4'),
+        ('5', '11', '5'),
+        ('6', '10', '3'),
+        ('7', '9', '1'),
+        ('8', '8', '3'),
+        ('9', '7', '4'),
+        ('10', '6', '5'),
+        ('11', '5', '2'),
+        ('12', '4', '2'),
+        ('13', '3', '4'),
+        ('14', '2', '3'),
+        ('15', '1', '1');
 #--
 INSERT INTO `daily_statistics` (`post_id`, `date`, `views`)
 VALUES  ('1', '2021-11-01', '3'),
@@ -147,14 +122,14 @@ VALUES  ('1', '2021-11-01', '3'),
         ('14', '2021-11-01', '1'),
         ('15', '2021-11-01', '5');
 #--
-ALTER TABLE `category_post`
-    ADD CONSTRAINT `FK_CATEGORY_POST_CATEGORY_ID` FOREIGN KEY (`category_id`)
-        REFERENCES `category` (`category_id`) ON DELETE CASCADE,
-    ADD CONSTRAINT `FK_CATEGORY_POST_POST_ID` FOREIGN KEY (`post_id`)
-        REFERENCES `post` (`post_id`) ON DELETE CASCADE;
-#--
-ALTER TABLE `author_post`
-    ADD CONSTRAINT `FK_AUTHOR_POST_CATEGORY_ID` FOREIGN KEY (`author_id`)
+ALTER TABLE `category_post_author`
+    ADD CONSTRAINT `FK_CATEGORY_POST_AUTHOR_AUTHOR_ID` FOREIGN KEY (`author_id`)
         REFERENCES `author` (`author_id`) ON DELETE CASCADE,
-    ADD CONSTRAINT `FK_AUTHOR_POST_POST_ID` FOREIGN KEY (`post_id`)
+    ADD CONSTRAINT `FK_CATEGORY_POST_AUTHOR_POST_ID` FOREIGN KEY (`post_id`)
+        REFERENCES `post` (`post_id`) ON DELETE CASCADE,
+    ADD CONSTRAINT `FK_CATEGORY_POST_AUTHOR_CATEGORY_ID` FOREIGN KEY (`category_id`)
+        REFERENCES `category` (`category_id`) ON DELETE CASCADE;
+#--
+ALTER TABLE `daily_statistics`
+    ADD CONSTRAINT `FK_DAILY_STATISTICS_POST_ID` FOREIGN KEY (`post_id`)
         REFERENCES `post` (`post_id`) ON DELETE CASCADE;
