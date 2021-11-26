@@ -1,19 +1,19 @@
 <?php
-/** @var \Nakonechnyi\Blog\Block\Category $block */
+/**  @var \Nakonechnyi\Cms\Block\NewestPosts $block */
 ?>
-<div title="post-wrapper">
-    <h1><?= $block->getCategory()->getName() ?></h1>
+<section title="Recently Viewed Post">
+    <h2>Recently Viewed Posts</h2>
     <div class="post-list">
-        <?php foreach ($block->getCategoryPosts() as $post) : ?>
+        <?php foreach ($block->getNewestPosts() as $post) : ?>
             <div class="post">
                 <a href="/<?= $post->getUrl() ?>" title="<?= $post->getName() ?>">
                     <img src="/post-placeholder.png" alt="<?= $post->getName() ?>" width="200"/>
                 </a>
-                <a href="/<?= $post->getUrl() ?>" title="<?= $post->getName() ?>"><?= $post->getName() ?></a>
+                <p><a href="/<?= $post->getUrl() ?>" title="<?= $post->getName() ?>"><?= $post->getName() ?></a></p>
                 <p><?= $post->getDescription() ?></p>
                 <p>By <a href="<?= $block->getPostAuthor($post->getAuthorId())->getUrl()?>"><span><?= $block->getPostAuthor($post->getAuthorId())->getName()?></span></a></p>
-                <span>data: <?= $post->getDate() ?></span>
+                <p> <span>data: <?= $post->getDate() ?></span></p>
             </div>
         <?php endforeach; ?>
     </div>
-</div>
+</section>

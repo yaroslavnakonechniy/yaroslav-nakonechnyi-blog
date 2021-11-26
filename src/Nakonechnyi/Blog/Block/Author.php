@@ -4,19 +4,16 @@ declare(strict_types=1);
 
 namespace Nakonechnyi\Blog\Block;
 
-use Nakonechnyi\Blog\Model\Category\Entity as CategoryEntity;
-use Nakonechnyi\Blog\Model\Post\Entity as PostEntity;
 use Nakonechnyi\Blog\Model\Author\Entity as AuthorEntity;
+use Nakonechnyi\Blog\Model\Post\Entity as PostEntity;
 
-class Category extends \Nakonechnyi\Framework\View\Block
+class Author extends \Nakonechnyi\Framework\View\Block
 {
     private \Nakonechnyi\Framework\Http\Request $request;
-
     private \Nakonechnyi\Blog\Model\Post\Repository $postRepository;
-
     private \Nakonechnyi\Blog\Model\Author\Repository $authorRepository;
 
-    protected string $template = '../src/Nakonechnyi/Blog/view/category.php';
+    protected string $template = '../src/Nakonechnyi/Blog/view/author.php';
 
     /**
      * @param \Nakonechnyi\Framework\Http\Request $request
@@ -32,25 +29,22 @@ class Category extends \Nakonechnyi\Framework\View\Block
         $this->postRepository = $postRepository;
         $this->authorRepository = $authorRepository;
     }
-
     /**
-     * @return CategoryEntity
+     * @return AuthorEntity
      */
-    public function getCategory(): CategoryEntity
+    public function getAuthor(): AuthorEntity
     {
-        return $this->request->getParameter('category');
+        return $this->request->getParameter('author');
     }
-
     /**
      * @return PostEntity[]
      */
-    public function getCategoryPosts(): array
+    public function getAuthorPosts(): array
     {
         return $this->postRepository->getByIds(
-            $this->getCategory()->getPostIds()
+            $this->getAuthor()->getPosts()
         );
     }
-
     /**
      * @param int $authorId
      * @return AuthorEntity

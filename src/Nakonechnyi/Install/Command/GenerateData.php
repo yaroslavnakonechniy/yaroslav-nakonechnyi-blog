@@ -21,6 +21,12 @@ class GenerateData extends \Symfony\Component\Console\Command\Command
 
     private const AUTHOR_COUNT = 20;
 
+    private const MIN_POSTS_COUNT = 5;
+
+    private const MAX_POSTS_COUNT = 20;
+
+    private int $postNumber;
+
     /**
      * @param \Nakonechnyi\Framework\Database\Adapter\AdapterInterface $adapter
      * @param string|null $name
@@ -65,11 +71,11 @@ class GenerateData extends \Symfony\Component\Console\Command\Command
     private function generateData(): void
     {
         $this->profile([$this, 'truncateTables']);
+        $this->profile([$this, 'generateAuthor']);
         $this->profile([$this, 'generateCategories']);
         $this->profile([$this, 'generatePots']);
-        $this->profile([$this, 'generateAuthor']);
-        $this->profile([$this, 'generateCategoryPostAuthor']);
         $this->profile([$this, 'generateDailyStatistics']);
+        $this->profile([$this, 'generateCategoryPost']);
     }
 
     /**
@@ -80,11 +86,11 @@ class GenerateData extends \Symfony\Component\Console\Command\Command
     private function truncateTables(): void
     {
         $tables = [
-            ProductRepository::TABLE_CATEGORY_POST_AUTHOR,
             'author',
+            'post',
+            'category',
+            'category_post',
             'daily_statistics',
-            CategoryRepository::TABLE,
-            ProductRepository::TABLE,
         ];
         $connection = $this->adapter->getConnection();
         $connection->query('SET FOREIGN_KEY_CHECKS=0');
@@ -124,47 +130,28 @@ class GenerateData extends \Symfony\Component\Console\Command\Command
      */
     private function generatePots(): void
     {
+        $this->postNumber = 0;
         $statement = $this->adapter->getConnection()
             ->prepare(<<<SQL
-                INSERT INTO post (`name`, `url`, `description`, `date`)
-                VALUES (:name, :url, :description, :date);
+                INSERT INTO post (`author_id`, `name`, `url`, `description`, `date`)
+                VALUES (:author_id, :name, :url, :description, :date);
             SQL);
 
         for ($i = 1; $i <= self::POST_COUNT; $i++) {
-            $name = "Post $i";
-            $url = str_replace(' ', '_', strtolower($name));
-            $statement->bindValue(':name', $name);
-            $statement->bindValue(':url', $url);
-            $statement->bindValue(':description', "$name short description text");
-            $statement->bindValue(':date', date('Y-m-d', random_int(1633046400, 1635724800)));
-            $statement->execute();
+            $postPerAuthor = random_int(self::MIN_POSTS_COUNT, self::MAX_POSTS_COUNT);
+            for ($j = 1; $j <= $postPerAuthor; $j++) {
+                $name = "Post $j";
+                $url = str_replace(' ', '_', strtolower($name));
+                $statement->bindValue(':author_id', $i, \PDO::PARAM_INT);
+                $statement->bindValue(':name', $name);
+                $statement->bindValue(':url', $url);
+                $statement->bindValue(':description', "$name short description text");
+                $statement->bindValue(':date', date('Y-m-d', random_int(1633046400, 1635724800)));
+                $statement->execute();
+            }
+            $this->postNumber += $postPerAuthor;
         }
     }
-
-    /**
-     * @return void
-     */
-//    private function generateCategoryPostAuthor(): void
-//    {
-//        $statement = $this->adapter->getConnection()
-//            ->prepare(<<<SQL
-//                INSERT INTO category_post_author (`category_id`, `post_id`, `author_id`)
-//                VALUES (:category_id, :post_id, :author_id);
-//            SQL);
-//        // Get only 5 random categories of total 7
-//        $categoryIds = array_rand(array_flip(range(1, 10)), 7);
-//        for ($i = 1; $i <= self::POST_COUNT; $i++) {
-//            if (random_int(1, 3) === 1) {
-//                continue;
-//            }
-//            $postCategories = (array) array_rand(array_flip($categoryIds), random_int(1, 7));
-//            foreach ($postCategories as $categoryId) {
-//                $statement->bindValue(':category_id', $categoryId);
-//                $statement->bindValue(':post_id', $i);
-//                $statement->execute();
-//            }
-//        }
-//    }
 
     /**
      * @return void
@@ -173,7 +160,7 @@ class GenerateData extends \Symfony\Component\Console\Command\Command
     {
         $statement = $this->adapter->getConnection()
             ->prepare(<<<SQL
-                INSERT INTO `author` ( `firstname`, `lastname`)
+                INSERT INTO author ( `firstname`, `lastname`)
                 VALUES (:firstname, :lastname);
             SQL);
 
@@ -186,25 +173,25 @@ class GenerateData extends \Symfony\Component\Console\Command\Command
 
     /**
      * @return void
+     * @throws \
      */
-    private function generateCategoryPostAuthor(): void
+    private function generateCategoryPost(): void
     {
         $statement = $this->adapter->getConnection()
             ->prepare(<<<SQL
-                INSERT INTO category_post_author (`author_id`, `post_id`, `category_id`)
-                VALUES (:author_id, :post_id, :category_id);
+                INSERT INTO category_post ( `post_id`, `category_id`)
+                VALUES (:post_id, :category_id);
             SQL);
-
-        for ($author_id = 1; $author_id <= self::POST_COUNT; $author_id++) {
-            $count_post = random_int(5, 20);
-            for ($post_id = 1; $post_id <= $count_post; $post_id++) {
-                $count_category = random_int(1, 7);
-                for ($category_id = 1; $category_id <= $count_category; $category_id++) {
-                    $statement->bindValue(':author_id', $author_id);
-                    $statement->bindValue(':post_id', $post_id);
-                    $statement->bindValue(':category_id', $category_id);
-                    $statement->execute();
-                }
+        $categoryIds = array_rand(array_flip(range(1, 10)), 7);
+        for ($i = 1; $i <= $this->postNumber; $i++) {
+            if (random_int(1, 3) === 1) {
+                continue;
+            }
+            $productCategories = (array)array_rand(array_flip($categoryIds), random_int(1, 3));
+            foreach ($productCategories as $categoryId) {
+                $statement->bindValue(':post_id', $i);
+                $statement->bindValue(':category_id', $categoryId);
+                $statement->execute();
             }
         }
     }
@@ -216,10 +203,10 @@ class GenerateData extends \Symfony\Component\Console\Command\Command
     {
         $statement = $this->adapter->getConnection()
             ->prepare(<<<SQL
-                INSERT INTO daily_statistics (`post_id`, `date`, `views`)
+                INSERT INTO `daily_statistics` (`post_id`, `date`, `views`)
                 VALUES (:post_id, :date, :views );
             SQL);
-        for ($i = 1; $i <= self::POST_COUNT; $i++) {
+        for ($i = 1; $i <= $this->postNumber; $i++) {
             $statement->bindValue(':post_id', $i);
             $statement->bindValue(':date', date('Y-m-d', random_int(1633046400, 1635724800)));
             $statement->bindValue(':views', random_int(1, 50));

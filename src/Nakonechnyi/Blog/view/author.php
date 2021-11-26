@@ -1,19 +1,21 @@
 <?php
-/** @var \Nakonechnyi\Blog\Block\Category $block */
+/** @var \Nakonechnyi\Blog\Block\Author $block */
 ?>
-<div title="post-wrapper">
-    <h1><?= $block->getCategory()->getName() ?></h1>
+<section title="Posts">
+    <h1><?= $block->getAuthor()->getName() ?></h1>
+
     <div class="post-list">
-        <?php foreach ($block->getCategoryPosts() as $post) : ?>
+        <?php foreach ($block->getAuthorPosts() as $post) : ?>
             <div class="post">
                 <a href="/<?= $post->getUrl() ?>" title="<?= $post->getName() ?>">
                     <img src="/post-placeholder.png" alt="<?= $post->getName() ?>" width="200"/>
                 </a>
-                <a href="/<?= $post->getUrl() ?>" title="<?= $post->getName() ?>"><?= $post->getName() ?></a>
-                <p><?= $post->getDescription() ?></p>
+                <p><a href="/<?= $post->getUrl() ?>" title="<?= $post->getName() ?>"><?= $post->getName() ?></a></p>
                 <p>By <a href="<?= $block->getPostAuthor($post->getAuthorId())->getUrl()?>"><span><?= $block->getPostAuthor($post->getAuthorId())->getName()?></span></a></p>
-                <span>data: <?= $post->getDate() ?></span>
+                <p><?= $post->getDescription() ?></p>
+                <p><span><?= $post->getDate() ?></span></p>
             </div>
         <?php endforeach; ?>
     </div>
-</div>
+</section>
+

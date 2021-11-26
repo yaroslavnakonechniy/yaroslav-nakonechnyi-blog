@@ -2,7 +2,7 @@
 
 SELECT c.name, p.name
 FROM category AS c
-         JOIN category_post_author AS cp
+         JOIN category_post AS cp
              on c.category_id = cp.category_id
          JOIN post p
              on cp.post_id = p.post_id;
@@ -11,7 +11,7 @@ FROM category AS c
 
 SELECT DISTINCT a.firstname, a.lastname, p.name
 FROM post AS p
-         JOIN category_post_author ap on p.post_id = ap.post_id
+         JOIN category_post ap on p.post_id = ap.post_id
          JOIN author a on a.author_id = ap.author_id;
 
 -- get Category/Post/Author by ID;
@@ -52,3 +52,4 @@ FROM post AS p
          JOIN category_post_author ap on p.post_id = ap.post_id
          JOIN author a on a.author_id = ap.author_id
         JOIN category c on ap.category_id = c.category_id;
+

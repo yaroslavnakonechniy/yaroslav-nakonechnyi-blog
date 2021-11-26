@@ -2,13 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Nakonechnyi\Blog\Model\Post;
+namespace Nakonechnyi\Blog\Model\Author;
 
 class Repository
 {
-    private \DI\FactoryInterface $factory;
-
-    public const TABLE = 'post';
+    public const TABLE = 'author';
     /**
      * @param \DI\FactoryInterface $factory
      */
@@ -16,7 +14,6 @@ class Repository
     {
         $this->factory = $factory;
     }
-
     /**
      * @return Entity[]
      */
@@ -24,29 +21,22 @@ class Repository
     {
         return [
             1 => $this->makeEntity()
-                ->setPostId(1)
-                ->setName('Football')
-                ->setUrl('football')
-                ->setDescription('NFL Week 5 game picks,')
                 ->setAuthorId(1)
-                ->setDate('11.06.2021'),
+                ->setName('Stiv Rockfeller')
+                ->setUrl('stiv-rockfeller')
+                ->setPosts([1]),
             2 => $this->makeEntity()
-                ->setPostId(2)
-                ->setName('Nike')
-                ->setUrl('tenis')
-                ->setDescription('Nike - it is good')
                 ->setAuthorId(2)
-                ->setDate('02.12.2021'),
+                ->setName('Elizabet Tailor')
+                ->setUrl('elizabet-tailor')
+                ->setPosts([2]),
             3 => $this->makeEntity()
-                ->setPostId(3)
-                ->setName('News for world')
-                ->setUrl('news-for-world')
-                ->setDescription('sdfds dsfdsf sfdsf sdf')
                 ->setAuthorId(3)
-                ->setDate('01.02.2021'),
+                ->setName('Sasha Novikov')
+                ->setUrl('sasha-novikov')
+                ->setPosts([3]),
         ];
     }
-
     /**
      * @param string $url
      * @return ?Entity
@@ -55,8 +45,8 @@ class Repository
     {
         $data = array_filter(
             $this->getList(),
-            static function ($post) use ($url) {
-                return $post->getUrl() === $url;
+            static function ($author) use ($url) {
+                return $author->getUrl() === $url;
             }
         );
 
@@ -64,17 +54,20 @@ class Repository
     }
 
     /**
-     * @param array $postIds
-     * @return Entity[]
+     * @param int $authorId
+     * @return Entity|null
      */
-    public function getByIds(array $postIds)
+    public function getAuthorById(int $authorId): ?Entity
     {
-        return array_intersect_key(
+        $data = array_filter(
             $this->getList(),
-            array_flip($postIds)
+            static function ($author) use ($authorId) {
+                return $author->getAuthorId() === $authorId;
+            }
         );
-    }
 
+        return array_pop($data);
+    }
     /**
      * @return Entity
      */
